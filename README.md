@@ -17,11 +17,18 @@ source djangoenv/bin/activate
 python -m pip install -U -r requirements.txt
 ```
 
-1. Perform migrations
+1. Perform migrations (`/server`)
 
 ```bash
 python manage.py makemigrations
 python manage.py migrate
+```
+
+Remember to repeat these steps after updating `server/djangoapp/models.py`:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate --run-syncdb
 ```
 
 2. Start local dev server:

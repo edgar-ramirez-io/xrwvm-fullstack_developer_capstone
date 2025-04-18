@@ -11,14 +11,27 @@ from django.contrib.auth import login, authenticate
 import logging
 import json
 from django.views.decorators.csrf import csrf_exempt
-from .populate import initiate
 
+from .models import CarMake, CarModel
+from .populate import initiate
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
 
 # Create your views here.
+
+def get_cars(request):
+    count = CarMake.objects.filter().count()
+    print(count)
+    if count == 0:
+        initiate()
+    car_models = CarModel.objects.select_related('car_make')
+    cars = []
+    for car_model in car_models:
+        cars.append({"CarModel": car_model.name, "CarMake": car_model.car_make.name})
+    return JsonResponse({"CarModels": cars})
+
 
 # Create a `login_request` view to handle sign in request
 @csrf_exempt
@@ -36,11 +49,13 @@ def login_user(request):
         data = {"userName": username, "status": "Authenticated"}
     return JsonResponse(data)
 
+
 # Create a `logout_request` view to handle sign out request
 def logout_request(request):
     logout(request)
     data = {"userName": ""}
     return JsonResponse(data)
+
 
 # Create a `registration` view to handle sign up request
 @csrf_exempt
@@ -63,7 +78,8 @@ def registration(request):
 
     logger.debug("{} Calling /registration with user_exists={}".format(username, user_exists))
     if not user_exists:
-        user = User.objects.create_user(username=username, password=password, first_name=first_name, last_name=last_name, email=email)
+        user = User.objects.create_user(username=username, password=password, first_name=first_name,
+                                        last_name=last_name, email=email)
         login(request, user)
         data = {"userName": username, "status": "Authenticated"}
         return JsonResponse(data)
