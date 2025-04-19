@@ -64,14 +64,28 @@ python3 manage.py createsuperuser
 python3 manage.py runserver
 ```
 
-1. Open admin with https://edgarramrez-8000.theianext-0-labs-prod-misc-tools-us-east-0.proxy.cognitiveclass.ai/admin
-1. Make sure to set-up `ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS`
+1. Open `server/djangoproj/settings.py`
+1. Update `ALLOWED_HOSTS` and `CSRF_TRUSTED_ORIGINS` with provisioned url wit following
+1. Open Lab and get the url from (left) Skills Network Toolbox - Other - Launch App - port 8000 - Your Application
+1. This will let you visit Admin and Frontend
 
 ```bash
 cd /home/project/xrwvm-fullstack_developer_capstone/server/frontend
 npm install
 npm run build
 ```
+
+## Mongo Server (cloud)
+
+```bash
+cd /home/project/xrwvm-fullstack_developer_capstone/server/database
+docker build . -t nodeapp
+docker-compose up
+```
+
+1. Test MongoDB API by hitting the provisioned URL from (left) Skills Network Toolbox - Other - Launch App - port 3030 - Your Application
+
+# Local Setup
 
 # Development (frontend)
 
