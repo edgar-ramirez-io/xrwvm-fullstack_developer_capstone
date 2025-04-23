@@ -1,9 +1,11 @@
 import { sortPlacesByDistance } from "./loc.js";
 import { AVAILABLE_PLACES } from "./data.js";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Places from "./Places.jsx";
 import "./travel.css";
 import logoImg from "./assets/logo.png";
+import Modal from "./Modal.jsx";
+import DeleteConfirmation from "./DeleteConfirmation.jsx";
 
 const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
 const storedPlaces = storedIds.map((id) => {
@@ -14,6 +16,8 @@ const storedPlaces = storedIds.map((id) => {
 function TravelApp() {
   const [availablePlaces, setAvailablePlaces] = useState([]);
   const [pickedPlaces, setPickedPlaces] = useState(storedPlaces);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const selectedPlace = useRef();
 
   useEffect(() => {
     setTimeout(
@@ -58,18 +62,37 @@ function TravelApp() {
     }
   };
 
-  const deleteClickHandler = (id) => {
+  const confirmDeletePlaceClickHandler = (id) => {
+    setModalIsOpen(true);
+    selectedPlace.current = id;
+  };
+
+  const deletePlaceClickHandler = useCallback(() => {
     setPickedPlaces((old) => {
-      return old.filter((place) => place.id !== id);
+      return old.filter((place) => place.id !== selectedPlace.current);
     });
 
+    setModalIsOpen(false);
+
     const storedIds = JSON.parse(localStorage.getItem("selectedPlaces")) || [];
-    const updatedStoreIds = storedIds.filter((place) => place !== id);
+    const updatedStoreIds = storedIds.filter(
+      (place) => place !== selectedPlace.current
+    );
     localStorage.setItem("selectedPlaces", JSON.stringify(updatedStoreIds));
-  };
+  }, []);
 
   return (
     <>
+      <Modal open={modalIsOpen}>
+        <DeleteConfirmation
+          onCancel={() => {
+            setModalIsOpen(false);
+          }}
+          onConfirm={() => {
+            deletePlaceClickHandler();
+          }}
+        />
+      </Modal>
       <header>
         <img src={logoImg} alt="Stylized globe" />
         <h1>PlacePicker</h1>
@@ -83,7 +106,7 @@ function TravelApp() {
           title="I'd like to visit ..."
           places={pickedPlaces}
           fallbackText="Pick places where you'd like to go!"
-          onSelectPlace={deleteClickHandler}
+          onSelectPlace={confirmDeletePlaceClickHandler}
         />
         <Places
           title="Available Places"
