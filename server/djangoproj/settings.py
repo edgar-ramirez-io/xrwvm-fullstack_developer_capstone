@@ -28,8 +28,8 @@ SECRET_KEY =\
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '<get it from Cloud>']
-CSRF_TRUSTED_ORIGINS = ['http://localhost', 'http://127.0.0.1', '<get it from Cloud>']
+ALLOWED_HOSTS = []
+CSRF_TRUSTED_ORIGINS = []
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [],
