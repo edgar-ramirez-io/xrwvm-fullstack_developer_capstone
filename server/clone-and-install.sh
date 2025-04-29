@@ -1,7 +1,7 @@
 #!/bin/bash
 echo "Cloning..."
 
-git clone https://github.com/edgar-ramirez-io/xrwvm-fullstack_developer_capstone.git
+echo "git clone https://github.com/edgar-ramirez-io/xrwvm-fullstack_developer_capstone.git"
 cd /home/project/xrwvm-fullstack_developer_capstone/server
 
 echo "pip and virtual env stuff..."
