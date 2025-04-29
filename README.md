@@ -98,11 +98,5 @@ docker-compose up
 1. Make changes in `server/frontend`
 1. run `npm install`
 1. run `npm run build` because it's configured as TEMPLATES
+1. run `npm run start`
 1. Test it with `http://localhost:8000/`
-
-# Development (database and learning.edx.org)
-
-1. Change directory ``
-1. Make sure to run `docker build . -t nodeapp` and `docker compose up` after changing the your Express app
-1. Run `docker-compose up`
-1. For development use `http://localhost:3030` because Docker is exposing that port
