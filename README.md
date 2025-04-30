@@ -54,7 +54,8 @@ cd /home/project/xrwvm-fullstack_developer_capstone/server
 
 npm run cloud
 
-## When scripts finishes
+## When scripts finish
+source djangoenv/bin/activate
 
 python3 manage.py makemigrations
 
@@ -62,7 +63,14 @@ python3 manage.py migrate
 
 python3 manage.py createsuperuser
 
+# update server/djangoproj/settings.py in further steps
+
 python3 manage.py runserver
+
+# In a new terminal do mongodb set-up (problems with scripts)
+cd /home/project/xrwvm-fullstack_developer_capstone/server/database
+docker build . -t nodeapp && docker-compose up
+# verify app in port http://localhost:3030
 ```
 
 1. Open `server/djangoproj/settings.py`
@@ -71,7 +79,7 @@ python3 manage.py runserver
 
 ```
    ALLOWED_HOSTS = ['localhost', 'https://edgarramrez-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
-   CSRF_TRUSTED_ORIGINS = ['https://localhost', 'https://edgarramrez-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
+   CSRF_TRUSTED_ORIGINS = ['http://localhost', 'https://edgarramrez-8000.theiadockernext-0-labs-prod-theiak8s-4-tor01.proxy.cognitiveclass.ai']
 ```
 
 1. Open Lab and get the url from (left) Skills Network Toolbox - Other - Launch App - port 8000 - Your Application
@@ -102,8 +110,12 @@ docker-compose up
 # Deploy sentiment analysis on Code Engine as a microservice (ONLY learning.edx.org)
 
 1. Go to Cloud section and select Code Engine - Create Project - Code Engine CLI
-1. cd xrwvm-fullstack_developer_capstone/server/djangoapp/microservices
-1. docker build . -t us.icr.io/${SN_ICR_NAMESPACE}/senti_analyzer
-1. docker push us.icr.io/${SN_ICR_NAMESPACE}/senti_analyzer
-1. ibmcloud ce application create --name sentianalyzer --image us.icr.io/${SN_ICR_NAMESPACE}/senti_analyzer --registry-secret icr-secret --port 5000
+
+```bash
+cd xrwvm-fullstack_developer_capstone/server/djangoapp/microservices
+docker build . -t us.icr.io/${SN_ICR_NAMESPACE}/senti_analyzer
+docker push us.icr.io/${SN_ICR_NAMESPACE}/senti_analyzer
+ibmcloud ce application create --name sentianalyzer --image us.icr.io/${SN_ICR_NAMESPACE}/senti_analyzer --registry-secret icr-secret --port 5000
+```
+
 1. Copy url and update `djangoapp/.env` with something like this `https://sentianalyzer.1uukanemq8i1.us-south.codeengine.appdomain.cloud/` (including `/`)

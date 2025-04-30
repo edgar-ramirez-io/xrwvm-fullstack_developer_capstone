@@ -18,6 +18,7 @@ from .restapis import get_request, analyze_review_sentiments, post_review
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+cache = {}
 
 
 # Create your views here.
@@ -97,9 +98,18 @@ def get_dealer_reviews(request, dealer_id):
         endpoint = "/fetchReviews/dealer/"+str(dealer_id)
         reviews = get_request(endpoint)
         for review_detail in reviews:
-            response = analyze_review_sentiments(review_detail['review'])
-            print(response)
-            review_detail['sentiment'] = response['sentiment'] if response is not None else "N/A"
+            cache_id = f"{dealer_id}-{review_detail['id']}"
+            if cache_id not in cache:
+                response = analyze_review_sentiments(review_detail['review'])
+                print(response)
+                cache[cache_id] = response
+                print("caching response from analyze_review_sentiments")
+            else:
+                print("return cached response: {} from analyze_review_sentiments".format(cache_id))
+                response = cache.get(cache_id)
+            print("review_detail: {}".format(review_detail))
+            print("cache: {}".format(cache))
+            review_detail['sentiment'] = response['sentiment'] if response is not None else None
         return JsonResponse({"status":200,"reviews":reviews})
     else:
         return JsonResponse({"status":400,"message":"Bad Request"})
