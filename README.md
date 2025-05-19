@@ -1,5 +1,7 @@
 # coding-project-template
 
+![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](./HIGH-LEVEL.jpg)
+
 ## server setup
 
 Lab: https://learning.edx.org/course/course-v1:IBM+CAD0321EN+3T2022/home
