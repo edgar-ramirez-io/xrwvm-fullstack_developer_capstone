@@ -23,4 +23,6 @@ urlpatterns = [
 
     path(route='dealer/<int:dealer_id>', view=views.get_dealer_details, name='dealer_details'),
 
+    path(route='chat/<str:prompt>', view=views.get_chat, name='chat'), # http://localhost:8000/djangoapp/chat
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

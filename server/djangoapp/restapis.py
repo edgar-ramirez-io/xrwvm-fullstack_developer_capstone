@@ -3,11 +3,13 @@
 import os
 from dotenv import load_dotenv
 import requests
+import json
 
 load_dotenv()
 
 backend_url = os.getenv(
     'backend_url', default="http://localhost:3030")
+ai_backend_url = os.getenv('AI_BACKEND_URL', default='http://localhost:8000/')
 sentiment_analyzer_url = os.getenv(
     'sentiment_analyzer_url',
     default="http://localhost:5050/")
@@ -45,5 +47,20 @@ def post_review(data_dict):
         print(response.json())
         return response.json()
     except:
+        print("Network exception occurred")
+        return None
+
+def fetch_chat(prompt):
+    request_url = ai_backend_url + "endpoint"
+    is_mock = True
+    print(f"Request to {request_url} with params: {prompt} and isMock: {is_mock}")
+    if is_mock:
+        with open('djangoapp/mocks/gpt-4o-mini-openai-v1-chat-completions.json', 'r') as file:
+            return json.load(file)
+    try:
+        response = requests.get(request_url)
+        return response.json()
+    except Exception as err:
+        print(f"Unexpected {err=}, {type(err)=}")
         print("Network exception occurred")
         return None
